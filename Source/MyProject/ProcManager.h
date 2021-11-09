@@ -21,7 +21,7 @@ class MYPROJECT_API AProcManager : public AActor
 	virtual void BeginPlay() override;
 
 	public:
-	UPROPERTY(VisibleAnywhere, Category="Procedural Rooms")
+	UPROPERTY(EditAnywhere, Category="Procedural Rooms")
 	TSubclassOf<AProcRoom> Room;
 
 	int MaxRoomNumber;
