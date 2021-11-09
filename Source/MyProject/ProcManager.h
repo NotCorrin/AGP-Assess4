@@ -24,6 +24,9 @@ class MYPROJECT_API AProcManager : public AActor
 	UPROPERTY(EditAnywhere, Category="Procedural Rooms")
 	TSubclassOf<AProcRoom> Room;
 
+	UPROPERTY(EditAnywhere, Category="Procedural Rooms")
+	TSubclassOf<ANavigationNode> NodeClass;
+
 	int MaxRoomNumber;
 	
 	TArray<AProcRoom*> Rooms;

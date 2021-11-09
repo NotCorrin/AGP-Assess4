@@ -191,7 +191,7 @@ ANavigationNode* AAIManager::FindFurthestNode(const FVector& Location)
 		return FurthestNode;
 }
 
-void AAIManager::GenerateNodes(const TArray<FVector>& Vertices, int32 Width, int32 Height)
+/*void AAIManager::GenerateNodes(const TArray<FVector>& Vertices, int32 Width, int32 Height)
 {
 	// Destroy all the ANavigationNodes
 	for (TActorIterator<ANavigationNode> It(GetWorld()); It; ++It)
@@ -262,9 +262,9 @@ void AAIManager::GenerateNodes(const TArray<FVector>& Vertices, int32 Width, int
 		}
 	}
 
-}
+}*/
 
-void AAIManager::AddConnection(ANavigationNode* FromNode, ANavigationNode* ToNode)
+/*void AAIManager::AddConnection(ANavigationNode* FromNode, ANavigationNode* ToNode)
 {
 	FVector DirectionVector = ToNode->GetActorLocation() - FromNode->GetActorLocation();
 	DirectionVector.Normalize();
@@ -276,4 +276,4 @@ void AAIManager::AddConnection(ANavigationNode* FromNode, ANavigationNode* ToNod
 		if (!ToNode->ConnectedNodes.Contains(FromNode))
 			ToNode->ConnectedNodes.Add(FromNode);
 	}
-}
+}*/

@@ -62,5 +62,6 @@ void AProcManager::GenerateStartingRoom_Implementation()
 	Rooms[0]->bIsStart = true;
 	Rooms[0]->RoomNumber = 1;
 	Rooms[0]->ProcManager = this;
+	Rooms[0]->Node = GetWorld()->SpawnActor<ANavigationNode>(NodeClass, FVector(200, 200, 5), FRotator::ZeroRotator);
 	Rooms[0]->GenerateWalls();
 }

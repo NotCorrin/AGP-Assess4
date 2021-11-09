@@ -12,6 +12,8 @@ ANavigationNode::ANavigationNode()
 
 	LocationComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Location Component"));
 	RootComponent = LocationComponent;
+
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned
@@ -30,7 +32,7 @@ void ANavigationNode::BeginPlay()
 void ANavigationNode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 }
 
 float ANavigationNode::FScore()

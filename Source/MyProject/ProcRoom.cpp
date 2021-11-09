@@ -110,6 +110,8 @@ void AProcRoom::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 
 	DOREPLIFETIME(AProcRoom, XCoord)
 	DOREPLIFETIME(AProcRoom, YCoord)
+
+	DOREPLIFETIME(AProcRoom, Node)
 }
 
 void AProcRoom::GenerateNextRoom_Implementation(FVector SpawnLocation, bool bUpRequired, bool bDownRequired, bool bRightRequired, bool bLeftRequired)
@@ -122,6 +124,11 @@ void AProcRoom::GenerateNextRoom_Implementation(FVector SpawnLocation, bool bUpR
 
 		// Set the parameters of the NewRoom
 		NewRoom->ProcManager = ProcManager;
+
+		NewRoom->Node = GetWorld()->SpawnActor<ANavigationNode>(NodeClass, SpawnLocation + FVector(200, 200, 5), FRotator::ZeroRotator);
+		NewRoom->Node->ConnectedNodes.Add(Node);
+		Node->ConnectedNodes.Add(NewRoom->Node);
+		
 		if (bUpRequired)
 		{
 			NewRoom->bHasUpDoor = true;
@@ -235,6 +242,10 @@ void AProcRoom::GenerateNextRoom_Implementation(FVector SpawnLocation, bool bUpR
 		NewRoom->bCanGenDown = false;
 		NewRoom->bCanGenRight = false;
 		NewRoom->bCanGenLeft = false;
+
+		NewRoom->Node = GetWorld()->SpawnActor<ANavigationNode>(NodeClass, SpawnLocation + FVector(200, 200, 5), FRotator::ZeroRotator);
+		NewRoom->Node->ConnectedNodes.Add(Node);
+		Node->ConnectedNodes.Add(NewRoom->Node);
 
 		NewRoom->ProcManager = ProcManager;
 		ProcManager->Rooms.Add(NewRoom);
