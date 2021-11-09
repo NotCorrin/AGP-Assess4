@@ -64,6 +64,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 		EPlayerWeaponShotType WeaponShotType;
 
+
+	float PickupSprintSpeed;
+	float PickupJumpHeight;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -86,9 +90,38 @@ public:
 
 	void RemoveJumpPickup();
 
+	void InstantHealthPickup();
+
 	void HOTPickup();
 
 	void RemoveWeaponShotType();
+
+
+
+	UFUNCTION(Server, Reliable)
+		void ServerSprintStart();
+
+	UFUNCTION(Server, Reliable)
+		void ServerSprintEnd();
+
+	UFUNCTION(Server, Reliable)
+		void AlreadySprinting();
+
+	UFUNCTION(Server, Reliable)
+		void SprintSpeed();
+
+	UFUNCTION(Server, Reliable)
+		void IncreaseJump();
+
+	UFUNCTION(Server, Reliable)
+		void DecreaseJump();
+
+protected:
+
+	float SprintMovemementSpeed;
+	float NormalMovementSpeed;
+
+	float NormalJumpHeight;
 
 private:
 

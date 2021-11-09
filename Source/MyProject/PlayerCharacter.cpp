@@ -8,6 +8,7 @@
 #include "TimerManager.h"
 #include "Engine/GameEngine.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -15,7 +16,7 @@ APlayerCharacter::APlayerCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	AutoPossessPlayer = EAutoReceiveInput::Player0;
+	//AutoPossessPlayer = EAutoReceiveInput::Player0;
 
 	//Set default member variable values
 	LookSensitivity = 1.0f;
@@ -36,6 +37,14 @@ APlayerCharacter::APlayerCharacter()
 	ShotTypeTimer = 0;
 
 	AmmoSize = 5;
+
+	SprintMovemementSpeed = GetCharacterMovement()->MaxWalkSpeed * SprintMultiplier;
+	NormalMovementSpeed = GetCharacterMovement()->MaxWalkSpeed;
+	PickupSprintSpeed = GetCharacterMovement()->MaxWalkSpeed * (SprintMultiplier + 5.0f);
+
+	PickupJumpHeight = GetCharacterMovement()->JumpZVelocity + 300.0f;
+	NormalJumpHeight = GetCharacterMovement()->JumpZVelocity;
+
 }
 
 // Called when the game starts or when spawned
@@ -54,6 +63,11 @@ void APlayerCharacter::BeginPlay()
 	}
 
 	HealthComponent = FindComponentByClass<UHealthComponent>();		//initialises the health component
+
+	if (HealthComponent != NULL)
+	{
+		HealthComponent->SetIsReplicated(true);
+	}
 
 	WeaponShotType = EPlayerWeaponShotType::SINGLE_SHOT;	//sets the player's gun shot type to SINGLE_SHOT
 }
@@ -100,17 +114,19 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &APlayerCharacter::MoveForward);
-	PlayerInputComponent->BindAxis(TEXT("Strafe"), this, &APlayerCharacter::Strafe);
-	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &APlayerCharacter::LookUp);
-	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &APlayerCharacter::Turn);
+	if (PlayerInputComponent != NULL)
+	{
+		PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &APlayerCharacter::MoveForward);
+		PlayerInputComponent->BindAxis(TEXT("Strafe"), this, &APlayerCharacter::Strafe);
+		PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &APlayerCharacter::LookUp);
+		PlayerInputComponent->BindAxis(TEXT("Turn"), this, &APlayerCharacter::Turn);
 
-	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Pressed, this, &APlayerCharacter::SprintStart);
-	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Released, this, &APlayerCharacter::SprintEnd);
+		PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
+		PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Pressed, this, &APlayerCharacter::SprintStart);
+		PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Released, this, &APlayerCharacter::SprintEnd);
 
-	PlayerInputComponent->BindAction(TEXT("Reload"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Reload);
-
+		PlayerInputComponent->BindAction(TEXT("Reload"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Reload);
+	}
 }
 
 void APlayerCharacter::MoveForward(float Value)
@@ -130,12 +146,16 @@ void APlayerCharacter::LookUp(float Value)
 {
 	FRotator LookUpRotation = FRotator::ZeroRotator;
 	LookUpRotation.Pitch = Value * LookSensitivity;
-	if (Camera->RelativeRotation.Pitch + LookUpRotation.Pitch < 90.0f
-		&& Camera->RelativeRotation.Pitch + LookUpRotation.Pitch > -90.0f)
+
+	if (Camera != NULL)
 	{
-		Camera->AddRelativeRotation(LookUpRotation);
-		Camera->RelativeRotation.Yaw = 0.0f;
-		Camera->RelativeRotation.Roll = 0.0f;
+		if (Camera->RelativeRotation.Pitch + LookUpRotation.Pitch < 90.0f
+			&& Camera->RelativeRotation.Pitch + LookUpRotation.Pitch > -90.0f)
+		{
+			Camera->AddRelativeRotation(LookUpRotation);
+			Camera->RelativeRotation.Yaw = 0.0f;
+			Camera->RelativeRotation.Roll = 0.0f;
+		}
 	}
 }
 
@@ -146,40 +166,69 @@ void APlayerCharacter::Turn(float Value)
 
 void APlayerCharacter::SprintStart()
 {
+
 	bIsSprinting = true;
 
 	if (bSprintPickedup)	//checks if the player has picked up a sprint power up
 	{
-		GetCharacterMovement()->MaxWalkSpeed *= (SprintMultiplier + 5.0f);		//increases sprint speed
+		GetCharacterMovement()->MaxWalkSpeed = PickupSprintSpeed;	//increases sprint speed
+		ServerSprintStart();
 	}
 	else
 	{
-		GetCharacterMovement()->MaxWalkSpeed *= SprintMultiplier;
+		//GetCharacterMovement()->MaxWalkSpeed *= SprintMultiplier;
+
+		GetCharacterMovement()->MaxWalkSpeed = SprintMovemementSpeed;
+		ServerSprintStart();
 	}
 
 	if (AnimInstance)
 	{
 		AnimInstance->bIsSprinting = true;
 	}
+
 }
 
 void APlayerCharacter::SprintEnd()
 {
+
 	bIsSprinting = false;
 
-	if (bSprintPickedup)	//checks if the player has picked up a sprint power up
-	{
-		GetCharacterMovement()->MaxWalkSpeed /= (SprintMultiplier + 5.0f);	//decreases sprint speed back to original Max Walk Speed if the plyaer has stopped sprinting
-	}
-	else
-	{
-		GetCharacterMovement()->MaxWalkSpeed /= SprintMultiplier;
-	}
+	GetCharacterMovement()->MaxWalkSpeed = NormalMovementSpeed;
+	ServerSprintEnd();
 
 	if (AnimInstance)
 	{
 		AnimInstance->bIsSprinting = false;
 	}
+
+}
+
+void APlayerCharacter::ServerSprintStart_Implementation()
+{
+	if (bSprintPickedup)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = PickupSprintSpeed;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = SprintMovemementSpeed;
+	}
+}
+
+void APlayerCharacter::ServerSprintEnd_Implementation()
+{
+	GetCharacterMovement()->MaxWalkSpeed = NormalMovementSpeed;
+}
+
+void APlayerCharacter::AlreadySprinting_Implementation()
+{
+	GetCharacterMovement()->MaxWalkSpeed = PickupSprintSpeed;
+}
+
+void APlayerCharacter::SprintSpeed_Implementation()
+{
+	GetCharacterMovement()->MaxWalkSpeed = SprintMovemementSpeed;
 }
 
 void APlayerCharacter::Reload()
@@ -189,47 +238,91 @@ void APlayerCharacter::Reload()
 
 void APlayerCharacter::RemoveSprintPickup()
 {
+
 	bSprintPickedup = false;	//resets for next pick up
 
 	if (bIsSprinting)	//checks if the player is still sprinting
 	{
-		GetCharacterMovement()->MaxWalkSpeed /= (SprintMultiplier + 5.0f);	//decreases sprint speed back to original Max Walk Speed if the player is still sprinting
+		//GetCharacterMovement()->MaxWalkSpeed /= (SprintMultiplier + 5.0f);	//decreases sprint speed back to original Max Walk Speed if the player is still sprinting
+
+		GetCharacterMovement()->MaxWalkSpeed = SprintMovemementSpeed;
+		SprintSpeed();
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = NormalMovementSpeed;
+		ServerSprintEnd();
 	}
 
 	SprintTimer = 0; //resets for next pick up
+
+}
+
+void APlayerCharacter::IncreaseJump_Implementation()
+{
+	GetCharacterMovement()->JumpZVelocity = PickupJumpHeight;
+}
+
+void APlayerCharacter::DecreaseJump_Implementation()
+{
+	GetCharacterMovement()->JumpZVelocity = NormalJumpHeight;
 }
 
 void APlayerCharacter::RemoveJumpPickup()
 {
 	bJumpPickedUp = false;	//resets for next pick up
 
-	GetCharacterMovement()->JumpZVelocity -= 300.0f;	//decreases Jump Z Velocity back to original value
+	//GetCharacterMovement()->JumpZVelocity -= 300.0f;	//decreases Jump Z Velocity back to original value
+
+	GetCharacterMovement()->JumpZVelocity = NormalJumpHeight;
+	DecreaseJump();
 
 	JumpTimer = 0;	//resets for next pick up
 }
 
-void APlayerCharacter::HOTPickup()
+void APlayerCharacter::InstantHealthPickup()
 {
-	if (HealthComponent->CurrentHealth < HealthComponent->MaxHealth)	//checks if the player's Current Health is less than its Max Health
+	if (GetLocalRole() == ROLE_Authority)
 	{
-		HOTEndTimer += 1;
-
-		if (HOTEndTimer <= 6.0f)	//checks if it has been less than 6 seconds
+		if (HealthComponent->CurrentHealth < HealthComponent->MaxHealth)
 		{
-			HealthComponent->CurrentHealth += 5.0f;		//increases player's Current Health
+			HealthComponent->CurrentHealth += 15.0f;
 
-			if (HealthComponent->CurrentHealth > HealthComponent->MaxHealth)	//checks if after the increase, the player's Currrent Health is greater than its Max Health
+			if (HealthComponent->CurrentHealth > HealthComponent->MaxHealth)		//checks if the player's current health is greater than its max health after the 15.0f was added
 			{
-				HealthComponent->CurrentHealth = HealthComponent->MaxHealth;	//Makes the player's Current Health equal to its Max Health
+				HealthComponent->CurrentHealth = HealthComponent->MaxHealth;		//sets the players current health to its max health
 			}
 
-			GEngine->AddOnScreenDebugMessage(-1, 12.0f, FColor::Red, FString::Printf(TEXT("Current Health: %f"), HealthComponent->CurrentHealth));	//prints its Current Health to the screen
+			GEngine->AddOnScreenDebugMessage(-1, 12.0f, FColor::Red, FString::Printf(TEXT("Current Health: %f"), HealthComponent->CurrentHealth));		//prints the player's current health to the screen
 		}
-		else
-		{
-			bHOTPickedUp = false;	//resets for next pick up
+	}
+}
 
-			HOTTimer = 0;	//resets for next pick up
+void APlayerCharacter::HOTPickup()
+{
+	if (HealthComponent != NULL && GetLocalRole() == ROLE_Authority)
+	{
+		if (HealthComponent->CurrentHealth < HealthComponent->MaxHealth)	//checks if the player's Current Health is less than its Max Health
+		{
+			HOTEndTimer += 1;
+
+			if (HOTEndTimer <= 6.0f)	//checks if it has been less than 6 seconds
+			{
+				HealthComponent->CurrentHealth += 5.0f;		//increases player's Current Health
+
+				if (HealthComponent->CurrentHealth > HealthComponent->MaxHealth)	//checks if after the increase, the player's Currrent Health is greater than its Max Health
+				{
+					HealthComponent->CurrentHealth = HealthComponent->MaxHealth;	//Makes the player's Current Health equal to its Max Health
+				}
+
+				GEngine->AddOnScreenDebugMessage(-1, 12.0f, FColor::Red, FString::Printf(TEXT("Current Health: %f"), HealthComponent->CurrentHealth));	//prints its Current Health to the screen
+			}
+			else
+			{
+				bHOTPickedUp = false;	//resets for next pick up
+
+				HOTTimer = 0;	//resets for next pick up
+			}
 		}
 	}
 }

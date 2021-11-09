@@ -1,10 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Pickup.h"
 #include "PlayerCharacter.h"
 #include "Engine/GameEngine.h"
 #include "TimerManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Pickup.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 APickup::APickup()
@@ -30,16 +31,14 @@ void APickup::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//WhichPowerup = FMath::RandRange(1, 100);				//decides which powerup will spawn
+	WhichPowerup = FMath::RandRange(1, 100);				//decides which powerup will spawn
 	WhichMovementPowerup = FMath::RandRange(1, 100);
 	WhichHealthPowerup = FMath::RandRange(1, 100);			//if it is a health powerup, decides which health powerup will spawn, instant health or health over time
 	WhichArmorPowerup = FMath::RandRange(1, 100);			//if it is a armor powerup, decides which armor powerup will spawn, light or heavy armor
-	//WhichWeaponShotType = FMath::RandRange(1, 100);			//if it is a weapon shot type powerup, decides which shot type it will spawn, triple shot, automatic or explosive
+	WhichWeaponShotType = FMath::RandRange(1, 100);			//if it is a weapon shot type powerup, decides which shot type it will spawn, triple shot, automatic or explosive
 
 	bSetMaterial = true;	//allows for the material of the pickup to be set to the material of whichever powerup was chosen
 
-	WhichPowerup = 61;
-	WhichWeaponShotType = 81;
 }
 
 // Called every frame
@@ -52,7 +51,7 @@ void APickup::Tick(float DeltaTime)
 void APickup::OnEnterPickup(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 
-	if (WhichPowerup <= 15)
+	/*if (WhichPowerup <= 15)
 	{
 		if (WhichMovementPowerup <= 50)
 		{
@@ -103,7 +102,9 @@ void APickup::OnEnterPickup(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 	else
 	{
 		OnAmmoPickup(OtherActor);	//increases the amount of ammo the player can hold by 5
-	}
+	}*/
+
+	OnPickup(OtherActor);
 }
 
 void APickup::OnPickup(AActor* ActorThatPickedUp)

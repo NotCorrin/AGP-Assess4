@@ -24,10 +24,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 		float MaxHealth;
-	UPROPERTY(BlueprintReadWrite)
+
+	UPROPERTY(BlueprintReadWrite, ReplicatedUsing = UpdateHealthBar)
 		float CurrentHealth;
 
-	int32 TakeDamage;
+	UPROPERTY(Replicated)
+		int32 TakeDamage;
 
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -39,4 +41,10 @@ public:
 
 	float HealthPercentageRemaining();
 
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+private:
+
+	UFUNCTION()
+		void UpdateHealthBar();
 };

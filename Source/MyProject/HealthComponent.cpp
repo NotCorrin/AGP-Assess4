@@ -2,6 +2,10 @@
 
 
 #include "HealthComponent.h"
+#include "Engine/GameEngine.h"
+#include "Net/UnrealNetwork.h"
+#include "Kismet/GameplayStatics.h"
+#include "PlayerHUD.h"
 
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
@@ -20,7 +24,7 @@ void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CurrentHealth = MaxHealth;
+	CurrentHealth = MaxHealth - 50.0f;
 
 }
 
@@ -31,6 +35,11 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+
+	if (GEngine && GetOwner()->GetLocalRole() == ROLE_AutonomousProxy)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::Printf(TEXT("Current Health: %f"), CurrentHealth));
+	}
 }
 
 void UHealthComponent::OnTakeDamage(float Damage)
@@ -62,3 +71,25 @@ float UHealthComponent::HealthPercentageRemaining()
 	return CurrentHealth / MaxHealth * 100.0f;
 }
 
+void UHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UHealthComponent, CurrentHealth);
+	DOREPLIFETIME(UHealthComponent, TakeDamage);
+}
+
+void UHealthComponent::UpdateHealthBar()
+{
+	if (GetOwner()->GetLocalRole() == ROLE_AutonomousProxy)
+	{
+		AHUD* HUD = UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHUD();
+
+		APlayerHUD* PlayerHUD = Cast<APlayerHUD>(HUD);
+
+		if (PlayerHUD != nullptr)
+		{
+			PlayerHUD->SetPlayerHealthBarPercent(HealthPercentageRemaining() / 100.0f);
+		}
+	}
+}

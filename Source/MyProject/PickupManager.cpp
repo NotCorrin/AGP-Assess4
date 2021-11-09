@@ -4,7 +4,10 @@
 #include "PickupManager.h"
 #include "EngineUtils.h"
 #include "PickupNode.h"
+#include "Engine/GameEngine.h"
+#include "Net/UnrealNetwork.h"
 #include "Pickup.h"
+#include "InstantHealthPickup.h"
 
 // Sets default values
 APickupManager::APickupManager()
@@ -24,7 +27,9 @@ void APickupManager::BeginPlay()
 		PopulateNodes();
 	}
 
-	CreateAgents();
+	//CreateAgents();
+
+	//GetWorldTimerManager().SetTimer(SpawnTimer, this, &APickupManager::SpawnPickup, SpawnInterval, true, 0.0f);
 
 }
 
@@ -50,16 +55,63 @@ void APickupManager::CreateAgents()
 		for (int32 i = 0; i < NumPickups; i++)	//iterates through the specified number of power ups
 		{
 
-			int32 PickupNodeIndex = FMath::RandRange(0, AllPickupNodes.Num() - 1);	//selects a random navigation node
-			APickup* Pickup = GetWorld()->SpawnActor<APickup>(PickupsToSpawn, AllPickupNodes[PickupNodeIndex]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllPickupNodes[PickupNodeIndex]->GetActorRotation());	//spawns the power up on the navigation node
-			Pickup->PickupManager = this;	//assigns the power ups pick up manager to this pick up manager
+			PickupNodeIndex = FMath::RandRange(0, AllPickupNodes.Num() - 1);	//selects a random navigation node
 
-			if (NumPickups > 1)	//checks if there is more than 1 specified number of power ups
+			RandPickup = FMath::RandRange(0, 100);
+
+			if (RandPickup < 10)
 			{
-				AllPickupNodes.RemoveAt(PickupNodeIndex);	//removes the pick up node from the array
+				APickup* Pickup = GetWorld()->SpawnActor<APickup>(SprintPickup, AllPickupNodes[PickupNodeIndex]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllPickupNodes[PickupNodeIndex]->GetActorRotation());	//spawns the power up on the navigation node
+				Pickup->PickupManager = this;	//assigns the power ups pick up manager to this pick up manager
+
+				if (NumPickups > 1)	//checks if there is more than 1 specified number of power ups
+				{
+					AllPickupNodes.RemoveAt(PickupNodeIndex);	//removes the pick up node from the array
+				}
+
+				UE_LOG(LogTemp, Warning, TEXT("SprintPickup"));
+
 			}
+			else if (RandPickup >= 10)
+			{
+				APickup* Pickup = GetWorld()->SpawnActor<APickup>(JumpPickup, AllPickupNodes[PickupNodeIndex]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllPickupNodes[PickupNodeIndex]->GetActorRotation());	//spawns the power up on the navigation node
+				Pickup->PickupManager = this;	//assigns the power ups pick up manager to this pick up manager
+
+				if (NumPickups > 1)	//checks if there is more than 1 specified number of power ups
+				{
+					AllPickupNodes.RemoveAt(PickupNodeIndex);	//removes the pick up node from the array
+				}
+
+				UE_LOG(LogTemp, Warning, TEXT("JumpPickup"));
+			}
+
+
+
 
 			UE_LOG(LogTemp, Warning, TEXT("Pickup Node Length: %i"), AllPickupNodes.Num());
 		}
 	}
+}
+
+/*void APickupManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(APickupManager, PickupNodeIndex);
+	DOREPLIFETIME(APickupManager, RandPickup);
+
+}*/
+
+void APickupManager::Init(const TArray<class APickupNode*>& PossibleSpawnLocationsArg, TSubclassOf<class APickup> PickupClassArg, float SpawnIntervalArg)
+{
+	PossibleSpawnLocations = PossibleSpawnLocationsArg;
+	PickupClass = PickupClassArg;
+	SpawnInterval = SpawnIntervalArg;
+}
+
+void APickupManager::SpawnPickup()
+{
+	int32 RandomLocation = FMath::RandRange(0, PossibleSpawnLocations.Num() - 1);
+	AInstantHealthPickup* Pickup = GetWorld()->SpawnActor<AInstantHealthPickup>(InstantHealthPickupClass, PossibleSpawnLocations[RandomLocation]->GetActorLocation() + FVector(0.0f, 0.0f, 50.0f), FRotator::ZeroRotator);
+	Pickup->SetLifeSpan(PICKUP_LIFETIME);
 }

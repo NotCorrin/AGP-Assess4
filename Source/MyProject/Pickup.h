@@ -58,9 +58,10 @@ public:
 	class AAIManager* AIManager;
 	class APickupManager* PickupManager;
 
+
 	UFUNCTION()
 
-	virtual void OnEnterPickup(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+		virtual void OnEnterPickup(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	virtual void OnPickup(AActor* ActorThatPickedUp);
 
@@ -85,4 +86,6 @@ public:
 	virtual void OnExplosivePickup(AActor* ActorThatPickedUp);
 
 	virtual void OnAmmoPickup(AActor* ActorThatPickedUp);
+
+
 };
