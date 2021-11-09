@@ -5,6 +5,7 @@
 
 #include "ProcManager.h"
 #include "Components/InstancedStaticMeshComponent.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AProcRoom::AProcRoom()
@@ -19,6 +20,8 @@ AProcRoom::AProcRoom()
 	bCanGenDown = true;
 	bCanGenRight = true;
 	bCanGenLeft = true;
+
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned
@@ -88,7 +91,28 @@ void AProcRoom::GenerateWalls()
 	}
 }
 
-void AProcRoom::GenerateNextRoom(FVector SpawnLocation, bool bUpRequired, bool bDownRequired, bool bRightRequired, bool bLeftRequired)
+void AProcRoom::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AProcRoom, bHasUpDoor)
+	DOREPLIFETIME(AProcRoom, bHasDownDoor)
+	DOREPLIFETIME(AProcRoom, bHasRightDoor)
+	DOREPLIFETIME(AProcRoom, bHasLeftDoor)
+
+	DOREPLIFETIME(AProcRoom, bCanGenUp)
+	DOREPLIFETIME(AProcRoom, bCanGenDown)
+	DOREPLIFETIME(AProcRoom, bCanGenRight)
+	DOREPLIFETIME(AProcRoom, bCanGenLeft)
+
+	DOREPLIFETIME(AProcRoom, bIsStart)
+
+	DOREPLIFETIME(AProcRoom, RoomNumber)
+
+	DOREPLIFETIME(AProcRoom, XCoord)
+	DOREPLIFETIME(AProcRoom, YCoord)
+}
+
+void AProcRoom::GenerateNextRoom_Implementation(FVector SpawnLocation, bool bUpRequired, bool bDownRequired, bool bRightRequired, bool bLeftRequired)
 {
 	// Only generate rooms with the ability to generate more rooms if under the MaxRoomNumber as defined in the ProcManager
 	if (ProcManager->Rooms.Num() < ProcManager->MaxRoomNumber)

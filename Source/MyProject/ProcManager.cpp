@@ -39,7 +39,7 @@ void AProcManager::SetMapValue(int XIndex, int YIndex)
 	LevelMap[YIndex * 17 + XIndex] = true;
 }
 
-void AProcManager::GenerateStartingRoom()
+void AProcManager::GenerateStartingRoom_Implementation()
 {
 	// Create the starting room (which in turn, will generate more rooms)
 	Rooms.Add(GetWorld()->SpawnActor<AProcRoom>(Room, FVector::ZeroVector, FRotator::ZeroRotator));

@@ -32,5 +32,6 @@ class MYPROJECT_API AProcManager : public AActor
 	bool GetMapValue(int XIndex, int YIndex);
 	void SetMapValue(int XIndex, int YIndex);
 
+	UFUNCTION(Server, Reliable)
 	void GenerateStartingRoom();
 };

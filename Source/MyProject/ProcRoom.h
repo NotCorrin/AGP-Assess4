@@ -36,36 +36,48 @@ class MYPROJECT_API AProcRoom : public AActor
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Room)
 	TSubclassOf<AActor> WallDoorClass;
 
-	UPROPERTY(VisibleAnywhere, Category=Room)
+	UPROPERTY(VisibleAnywhere, Category=Room, Replicated)
 	bool bHasUpDoor;
 
-	UPROPERTY(VisibleAnywhere, Category=Room)
+	UPROPERTY(VisibleAnywhere, Category=Room, Replicated)
 	bool bHasDownDoor;
 	
-	UPROPERTY(VisibleAnywhere, Category=Room)
+	UPROPERTY(VisibleAnywhere, Category=Room, Replicated)
 	bool bHasRightDoor;
 
-	UPROPERTY(VisibleAnywhere, Category=Room)
+	UPROPERTY(VisibleAnywhere, Category=Room, Replicated)
 	bool bHasLeftDoor;
 
+	UPROPERTY(Replicated)
 	bool bCanGenUp;
+
+	UPROPERTY(Replicated)
 	bool bCanGenDown;
+
+	UPROPERTY(Replicated)
 	bool bCanGenRight;
+	
+	UPROPERTY(Replicated)
 	bool bCanGenLeft;
 
+	UPROPERTY(Replicated)
 	bool bIsStart;
 	
-	UPROPERTY(VisibleAnywhere, Category=Room)
+	UPROPERTY(VisibleAnywhere, Category=Room, Replicated)
 	int RoomNumber;
 
 	AProcManager* ProcManager;
 
-	UPROPERTY(VisibleAnywhere, Category=Room)
+	UPROPERTY(VisibleAnywhere, Category=Room, Replicated)
 	int XCoord;
 
-	UPROPERTY(VisibleAnywhere, Category=Room)
+	UPROPERTY(VisibleAnywhere, Category=Room, Replicated)
 	int YCoord;
 	
 	void GenerateWalls();
+
+	UFUNCTION(Server, Reliable)
 	void GenerateNextRoom(FVector SpawnLocation, bool bUpRequired, bool bDownRequired, bool bRightRequired, bool bLeftRequired);
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };
