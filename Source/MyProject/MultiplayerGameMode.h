@@ -31,6 +31,8 @@ public:
 
 	void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessages) override;
 
+	void GeneratePickupFunctionality();
+
 
 private:
 

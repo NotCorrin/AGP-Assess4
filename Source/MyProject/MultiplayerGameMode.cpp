@@ -14,10 +14,23 @@ void AMultiplayerGameMode::InitGame(const FString& MapName, const FString& Optio
 {
 	Super::InitGame(MapName, Options, ErrorMessages);
 
+	UE_LOG(LogTemp, Warning, TEXT("PLEAAASE"))
+	
+	FTimerHandle TimerHandle;
+	
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AMultiplayerGameMode::GeneratePickupFunctionality, 5, false);
+
+	
+}
+
+void AMultiplayerGameMode::GeneratePickupFunctionality()
+{
 	for (TActorIterator<APickupNode> It(GetWorld()); It; ++It)
 	{
 		AllPickupNodes.Add(*It);	//Adds all pick up nodes in the level to an array
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("LEZZ GOO"))
 
 	UWorld* World = GetWorld();
 
