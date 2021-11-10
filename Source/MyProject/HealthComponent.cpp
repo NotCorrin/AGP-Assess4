@@ -16,6 +16,7 @@ UHealthComponent::UHealthComponent()
 	MaxHealth = 100.0f;
 
 	TakeDamage = 0;
+	MaxArmor = 0;
 }
 
 
@@ -68,7 +69,18 @@ void UHealthComponent::OnDeath()
 
 float UHealthComponent::HealthPercentageRemaining()
 {
-	return CurrentHealth / MaxHealth * 100.0f;
+	//return CurrentHealth / MaxHealth * 100.0f;
+
+	if (MaxArmor == 0)
+	{
+		return TakeDamage = 0;
+
+		UE_LOG(LogTemp, Error, TEXT("Take Damage = 0"));
+	}
+	else
+	{
+		return TakeDamage / MaxArmor * 100.0f;
+	}
 }
 
 void UHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -79,7 +91,7 @@ void UHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(UHealthComponent, TakeDamage);
 }
 
-void UHealthComponent::UpdateHealthBar()
+void UHealthComponent::UpdateArmorBar()
 {
 	if (GetOwner()->GetLocalRole() == ROLE_AutonomousProxy)
 	{

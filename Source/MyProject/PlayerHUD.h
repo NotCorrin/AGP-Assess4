@@ -26,8 +26,12 @@ private:
 	UUserWidget* CurrentPlayerHUDWidget;
 	class UProgressBar* HealthProgressBar;
 	class UTextBlock* RoundsRemainingText;
+	UTextBlock* ArmorText;
 
 	UFUNCTION(BlueprintCallable)
 	void SetAmmoText(int32 RoundsRemaining);
+
+	UFUNCTION(BlueprintCallable)
+	void SetArmorText(int32 TakeDamage);
 
 };

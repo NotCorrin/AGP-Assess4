@@ -24,6 +24,7 @@ APlayerHUD::APlayerHUD()
 
 			HealthProgressBar = Cast<UProgressBar>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("ProgHealthBar")));
 			RoundsRemainingText = Cast<UTextBlock>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("RoundsRemaining")));
+			ArmorText = Cast<UTextBlock>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("Armor")));
 		}
 	}
 }
@@ -41,5 +42,13 @@ void APlayerHUD::SetAmmoText(int32 RoundsRemaining)
 	if (RoundsRemainingText)
 	{
 		RoundsRemainingText->SetText(FText::FromString(FString::Printf(TEXT("%i"), RoundsRemaining)));
+	}
+}
+
+void APlayerHUD::SetArmorText(int32 TakeDamage)
+{
+	if (ArmorText)
+	{
+		ArmorText->SetText(FText::FromString(FString::Printf(TEXT("%i"), TakeDamage)));
 	}
 }
