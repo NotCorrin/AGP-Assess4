@@ -40,11 +40,6 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APickup> HeavyArmorPickupClass;
 
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<APickup> TripleShotPickupClass;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<APickup> ExplosivePickupClass;
 
 	void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessages) override;
 

@@ -53,7 +53,7 @@ void AMultiplayerGameMode::GeneratePickupFunctionality()
 			int32 WhichArmorPowerup = FMath::RandRange(1, 100);
 			int32 WhichWeaponShotType = FMath::RandRange(1, 100);
 
-			if (WhichPowerup <= 15)
+			if (WhichPowerup <= 30)
 			{
 				if (WhichMovementPowerup <= 50)
 				{
@@ -85,7 +85,7 @@ void AMultiplayerGameMode::GeneratePickupFunctionality()
 				}
 				
 			}
-			else if (WhichPowerup > 15 && WhichPowerup <= 40)
+			else if (WhichPowerup > 30 && WhichPowerup <= 70)
 			{
 				if (WhichHealthPowerup <= 70)
 				{
@@ -116,7 +116,7 @@ void AMultiplayerGameMode::GeneratePickupFunctionality()
 					}
 				}
 			}
-			else if (WhichPowerup > 40 && WhichPowerup <= 60)
+			else
 			{
 				if (WhichArmorPowerup <= 60)
 				{
@@ -144,37 +144,6 @@ void AMultiplayerGameMode::GeneratePickupFunctionality()
 						}
 
 						UE_LOG(LogTemp, Warning, TEXT("Heavy Armor Spawned"));
-					}
-				}
-			}
-			else
-			{
-				if (WhichWeaponShotType <= 45)
-				{
-					if (World)
-					{
-						ATripleShotPickup* Pickup = GetWorld()->SpawnActor<ATripleShotPickup>(TripleShotPickupClass, AllNavigationNodes[RandPickupNode]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllNavigationNodes[RandPickupNode]->GetActorRotation());
-
-						if (AllNavigationNodes.Num() > 1)	//checks if there is more than 1 specified number of power ups
-						{
-							AllNavigationNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
-						}
-
-						UE_LOG(LogTemp, Warning, TEXT("Triple Shot Spawned"));
-					}
-				}
-				else
-				{
-					if (World)
-					{
-						AExplosivePickup* Pickup = GetWorld()->SpawnActor<AExplosivePickup>(ExplosivePickupClass, AllNavigationNodes[RandPickupNode]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllNavigationNodes[RandPickupNode]->GetActorRotation());
-
-						if (AllNavigationNodes.Num() > 1)	//checks if there is more than 1 specified number of power ups
-						{
-							AllNavigationNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
-						}
-
-						UE_LOG(LogTemp, Warning, TEXT("Triple Shot Spawned"));
 					}
 				}
 			}
