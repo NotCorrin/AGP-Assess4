@@ -293,7 +293,7 @@ void APlayerCharacter::InstantHealthPickup()
 				HealthComponent->CurrentHealth = HealthComponent->MaxHealth;		//sets the players current health to its max health
 			}
 
-			GEngine->AddOnScreenDebugMessage(-1, 12.0f, FColor::Red, FString::Printf(TEXT("Current Health: %f"), HealthComponent->CurrentHealth));		//prints the player's current health to the screen
+			//GEngine->AddOnScreenDebugMessage(-1, 12.0f, FColor::Red, FString::Printf(TEXT("Current Health: %f"), HealthComponent->CurrentHealth));		//prints the player's current health to the screen
 		}
 	}
 }
@@ -315,7 +315,7 @@ void APlayerCharacter::HOTPickup()
 					HealthComponent->CurrentHealth = HealthComponent->MaxHealth;	//Makes the player's Current Health equal to its Max Health
 				}
 
-				GEngine->AddOnScreenDebugMessage(-1, 12.0f, FColor::Red, FString::Printf(TEXT("Current Health: %f"), HealthComponent->CurrentHealth));	//prints its Current Health to the screen
+				//GEngine->AddOnScreenDebugMessage(-1, 12.0f, FColor::Red, FString::Printf(TEXT("Current Health: %f"), HealthComponent->CurrentHealth));	//prints its Current Health to the screen
 			}
 			else
 			{

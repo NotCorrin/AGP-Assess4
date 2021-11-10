@@ -20,14 +20,31 @@ public:
 
 	TArray<class APickupNode*> AllPickupNodes;
 
-	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<APickup> SprintPickupClass;
+	TArray<class ANavigationNode*> AllNavigationNodes;
 
 	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<APickup> JumpPickupClass;
+	TSubclassOf<APickup> SprintPickupClass;
 
 	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<APickup> InstantHealthPickupClass;
+	TSubclassOf<APickup> JumpPickupClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<APickup> InstantHealthPickupClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<APickup> HOTPickupClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<APickup> LightArmorPickupClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<APickup> HeavyArmorPickupClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<APickup> TripleShotPickupClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<APickup> ExplosivePickupClass;
 
 	void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessages) override;
 

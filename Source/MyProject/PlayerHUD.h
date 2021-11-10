@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
-#include "Blueprint/UserWidget.h"
-#include "Components/ProgressBar.h"
 #include "PlayerHUD.generated.h"
 
 /**
@@ -24,9 +22,12 @@ public:
 
 private:
 
-	TSubclassOf<UUserWidget> PlayerHUDClass;
+	TSubclassOf<class UUserWidget> PlayerHUDClass;
 	UUserWidget* CurrentPlayerHUDWidget;
+	class UProgressBar* HealthProgressBar;
+	class UTextBlock* RoundsRemainingText;
 
-	UProgressBar* HealthProgressBar;
+	UFUNCTION(BlueprintCallable)
+	void SetAmmoText(int32 RoundsRemaining);
 
 };

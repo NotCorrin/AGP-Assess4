@@ -3,6 +3,9 @@
 
 #include "PlayerHUD.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Components/ProgressBar.h"
+#include "Components/TextBlock.h"
+#include "Blueprint/UserWidget.h"
 
 APlayerHUD::APlayerHUD()
 {
@@ -19,9 +22,8 @@ APlayerHUD::APlayerHUD()
 		{
 			CurrentPlayerHUDWidget->AddToViewport();
 
-			UWidget* ProgressBar = CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("ProgHealthBar"));
-
-			HealthProgressBar = Cast<UProgressBar>(ProgressBar);
+			HealthProgressBar = Cast<UProgressBar>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("ProgHealthBar")));
+			RoundsRemainingText = Cast<UTextBlock>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("RoundsRemaining")));
 		}
 	}
 }
@@ -31,5 +33,13 @@ void APlayerHUD::SetPlayerHealthBarPercent(float Percent)
 	if (HealthProgressBar != nullptr)
 	{
 		HealthProgressBar->SetPercent(Percent);
+	}
+}
+
+void APlayerHUD::SetAmmoText(int32 RoundsRemaining)
+{
+	if (RoundsRemainingText)
+	{
+		RoundsRemainingText->SetText(FText::FromString(FString::Printf(TEXT("%i"), RoundsRemaining)));
 	}
 }
