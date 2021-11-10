@@ -19,8 +19,6 @@
 void AMultiplayerGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessages)
 {
 	Super::InitGame(MapName, Options, ErrorMessages);
-
-	UE_LOG(LogTemp, Warning, TEXT("PLEAAASE"));
 	
 	FTimerHandle TimerHandle;
 	
@@ -38,8 +36,6 @@ void AMultiplayerGameMode::GeneratePickupFunctionality()
 	{
 		AllNavigationNodes.Add(*It);	//Adds all pick up nodes in the level to an array
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("LEZZ GOO"));
 
 	UWorld* World = GetWorld();
 

@@ -6,6 +6,7 @@
 #include "NavigationNode.h"
 #include "EnemyCharacter.h"
 #include "Pickup.h"
+#include "TimerManager.h"
 
 // Sets default values
 AAIManager::AAIManager()
@@ -20,13 +21,17 @@ AAIManager::AAIManager()
 void AAIManager::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	if (AllNodes.Num() == 0)
 	{
 		UE_LOG(LogTemp, Display, TEXT("POPULATING NODES"))
-			PopulateNodes();
+		FTimerHandle PopulateTimerHandle;
+		GetWorldTimerManager().SetTimer(PopulateTimerHandle, this, &AAIManager::PopulateNodes, 4, false);
 	}
-	CreateAgents();
+
+	FTimerHandle AgentTimerHandle;
+	GetWorldTimerManager().SetTimer(AgentTimerHandle, this, &AAIManager::CreateAgents, 5, false);
+	
 	UE_LOG(LogTemp, Warning, TEXT("Number of nodes: %i"), AllNodes.Num())
 }
 
@@ -117,8 +122,10 @@ TArray<ANavigationNode*> AAIManager::ReconstructPath(ANavigationNode* StartNode,
 
 void AAIManager::PopulateNodes()
 {
+	UE_LOG(LogTemp, Error, TEXT("Populate nodes function is called"))
 	for (TActorIterator<ANavigationNode> It(GetWorld()); It; ++It)
 	{
+		UE_LOG(LogTemp, Error, TEXT("POPULATING!!"))
 		AllNodes.Add(*It);
 
 		AllPickupNodes.Add(*It);	//adds all navigation nodes to an array
@@ -127,6 +134,7 @@ void AAIManager::PopulateNodes()
 
 void AAIManager::CreateAgents()
 {
+	UE_LOG(LogTemp, Error, TEXT("Create Agents is running"))
 	if (AllNodes.Num() > 0)
 	{
 		for (int32 i = 0; i < NumAI; i++)
