@@ -12,6 +12,7 @@
 #include "PlayerHUD.h"
 #include "LightArmorPickup.h"
 #include "HeavyArmorPickup.h"
+#include "IncreasedDamagePickup.h"
 #include "Kismet/GameplayStatics.h"
 
 void AMultiplayerGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessages)
@@ -66,7 +67,7 @@ void AMultiplayerGameMode::GeneratePickupFunctionality()
 				}
 				
 			}
-			else if (WhichPowerup > 30 && WhichPowerup <= 70)
+			else if (WhichPowerup > 30 && WhichPowerup <= 60)
 			{
 				if (WhichHealthPowerup <= 70)
 				{
@@ -87,7 +88,7 @@ void AMultiplayerGameMode::GeneratePickupFunctionality()
 					}
 				}
 			}
-			else
+			else if (WhichPowerup > 60 && WhichPowerup <= 90)
 			{
 				if (WhichArmorPowerup <= 60)
 				{
@@ -106,6 +107,15 @@ void AMultiplayerGameMode::GeneratePickupFunctionality()
 					{
 						AllPickupNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
 					}
+				}
+			}
+			else
+			{
+				AIncreasedDamagePickup* Pickup = GetWorld()->SpawnActor<AIncreasedDamagePickup>(IncreasedDamagePickupClass, AllPickupNodes[RandPickupNode]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllPickupNodes[RandPickupNode]->GetActorRotation());
+
+				if (AllPickupNodes.Num() > 1)	//checks if there is more than 1 specified number of power ups
+				{
+					AllPickupNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
 				}
 			}
 		}

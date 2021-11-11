@@ -34,6 +34,9 @@ public:
 	bool bJumpPickedUp;
 	bool bHOTPickedUp;
 
+	UPROPERTY(BlueprintReadOnly)
+	bool bDamagePickedUp;
+
 	UPROPERTY(BlueprintReadWrite)
 	int32 RoundsRemaining;
 
@@ -43,9 +46,13 @@ public:
 	int32 JumpTimer;
 	int32 HOTTimer;
 	int32 HOTEndTimer;
+	int32 DamageTimer;
 
 	float PickupSprintSpeed;
 	float PickupJumpHeight;
+
+	UPROPERTY(BlueprintReadOnly)
+	float IncreasedDamage;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -98,6 +105,8 @@ public:
 
 	UFUNCTION(Client, Reliable)
 	void SetGameOver();
+
+	void IncreaseDamagePickup();
 
 protected:
 

@@ -55,7 +55,7 @@ void UHealthComponent::OnTakeDamage(float Damage)
 
 		CurrentHealth -= Damage;
 
-		if (CurrentHealth < 0.0f)
+		if (CurrentHealth <= 0.0f)
 		{
 			CurrentHealth = 0;
 			OnDeath();

@@ -31,6 +31,9 @@ APlayerCharacter::APlayerCharacter()
 	bSprintPickedup = false;
 	bJumpPickedUp = false;
 	bHOTPickedUp = false;
+	bDamagePickedUp = false;
+
+	IncreasedDamage = 100.0f;
 
 	SprintTimer = 0;
 	JumpTimer = 0;
@@ -99,6 +102,13 @@ void APlayerCharacter::Tick(float DeltaTime)
 		GetWorldTimerManager().SetTimer(MemberTimerHandle, this, &APlayerCharacter::HOTPickup, 1.f, true);		//calls and loops the HOTPickup function every 1 seconds
 
 		HOTEndTimer = 0;	//after all health points have been added resets timer fo next pick up
+	}
+	else if (bDamagePickedUp && DamageTimer == 0)	//checks if the player has picked up a jump power up and if the JumpTimer is set to 0
+	{
+		DamageTimer = 1;	//sets timer to 1 so the RemoveJumpPickup function isn't called every frame
+
+		FTimerHandle MemberTimerHandle;
+		GetWorldTimerManager().SetTimer(MemberTimerHandle, this, &APlayerCharacter::IncreaseDamagePickup, 5.f, false);		//calls the RemoveJumpPickup function after 5 seconds
 	}
 }
 
@@ -366,4 +376,11 @@ void APlayerCharacter::SetGameOver_Implementation()
 
 		UE_LOG(LogTemp, Error, TEXT("Autonomous"))
 	}
+}
+
+void APlayerCharacter::IncreaseDamagePickup()
+{
+	bDamagePickedUp = false;
+
+	DamageTimer = 0;
 }
