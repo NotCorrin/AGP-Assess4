@@ -6,7 +6,7 @@
 
 #include "Components/InstancedStaticMeshComponent.h"
 #include "GameFramework/Actor.h"
-#include "NavigationNode.h"
+#include "PickupNode.h"
 #include "ProcRoom.generated.h"
 
 class AProcManager;
@@ -38,7 +38,7 @@ class MYPROJECT_API AProcRoom : public AActor
 	TSubclassOf<AActor> WallDoorClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Room)
-	TSubclassOf<ANavigationNode> NodeClass;
+	TSubclassOf<APickupNode> NodeClass;
 
 	UPROPERTY(VisibleAnywhere, Category=Room, Replicated)
 	bool bHasUpDoor;
@@ -77,11 +77,9 @@ class MYPROJECT_API AProcRoom : public AActor
 
 	UPROPERTY(VisibleAnywhere, Category=Room, Replicated)
 	int YCoord;
-	
-	/*NavigationNode* NavigationNode*/
 
 	UPROPERTY(Replicated)
-	ANavigationNode* Node;
+	APickupNode* Node;
 	
 	void GenerateWalls();
 

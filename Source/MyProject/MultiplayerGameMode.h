@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
 #include "Pickup.h"
+#include "PickupNode.h"
 #include "MultiplayerGameMode.generated.h"
 
 /**
@@ -18,8 +19,6 @@ class MYPROJECT_API AMultiplayerGameMode : public AGameMode
 public:
 
 	TArray<class APickupNode*> AllPickupNodes;
-
-	TArray<class ANavigationNode*> AllNavigationNodes;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APickup> SprintPickupClass;

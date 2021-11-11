@@ -3,7 +3,6 @@
 
 #include "MultiplayerGameMode.h"
 #include "PickupNode.h"
-#include "NavigationNode.h"
 #include "EngineUtils.h"
 #include "TimerManager.h"
 #include "SprintPickup.h"
@@ -30,18 +29,13 @@ void AMultiplayerGameMode::GeneratePickupFunctionality()
 		AllPickupNodes.Add(*It);	//Adds all pick up nodes in the level to an array
 	}
 
-	for (TActorIterator<ANavigationNode> It(GetWorld()); It; ++It)
-	{
-		AllNavigationNodes.Add(*It);	//Adds all pick up nodes in the level to an array
-	}
+	if (AllPickupNodes.Num() > 0) {
 
-	if (AllNavigationNodes.Num() > 0) {
-
-		int32 NumPickupSpawn = FMath::RandRange(1, AllNavigationNodes.Num());
+		int32 NumPickupSpawn = FMath::RandRange(1, AllPickupNodes.Num());
 
 		for (int32 i = 0; i < NumPickupSpawn; i++)
 		{
-			int32 RandPickupNode = FMath::RandRange(0, AllNavigationNodes.Num() - 1);
+			int32 RandPickupNode = FMath::RandRange(0, AllPickupNodes.Num() - 1);
 
 			int32 WhichPowerup = FMath::RandRange(1, 100);
 			int32 WhichMovementPowerup = FMath::RandRange(1, 100);
@@ -53,20 +47,20 @@ void AMultiplayerGameMode::GeneratePickupFunctionality()
 			{
 				if (WhichMovementPowerup <= 50)
 				{
-					ASprintPickup* Pickup = GetWorld()->SpawnActor<ASprintPickup>(SprintPickupClass, AllNavigationNodes[RandPickupNode]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllNavigationNodes[RandPickupNode]->GetActorRotation());
+					ASprintPickup* Pickup = GetWorld()->SpawnActor<ASprintPickup>(SprintPickupClass, AllPickupNodes[RandPickupNode]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllPickupNodes[RandPickupNode]->GetActorRotation());
 
-					if (AllNavigationNodes.Num() > 1)	//checks if there is more than 1 specified number of power ups
+					if (AllPickupNodes.Num() > 1)	//checks if there is more than 1 specified number of power ups
 					{
-						AllNavigationNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
+						AllPickupNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
 					}
 				}
 				else
 				{
-					AJumpPickup* Pickup = GetWorld()->SpawnActor<AJumpPickup>(JumpPickupClass, AllNavigationNodes[RandPickupNode]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllNavigationNodes[RandPickupNode]->GetActorRotation());
+					AJumpPickup* Pickup = GetWorld()->SpawnActor<AJumpPickup>(JumpPickupClass, AllPickupNodes[RandPickupNode]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllPickupNodes[RandPickupNode]->GetActorRotation());
 
-					if (AllNavigationNodes.Num() > 1)	//checks if there is more than 1 specified number of power ups
+					if (AllPickupNodes.Num() > 1)	//checks if there is more than 1 specified number of power ups
 					{
-						AllNavigationNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
+						AllPickupNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
 					}
 				}
 				
@@ -75,20 +69,20 @@ void AMultiplayerGameMode::GeneratePickupFunctionality()
 			{
 				if (WhichHealthPowerup <= 70)
 				{
-					AInstantHealthPickup* Pickup = GetWorld()->SpawnActor<AInstantHealthPickup>(InstantHealthPickupClass, AllNavigationNodes[RandPickupNode]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllNavigationNodes[RandPickupNode]->GetActorRotation());
+					AInstantHealthPickup* Pickup = GetWorld()->SpawnActor<AInstantHealthPickup>(InstantHealthPickupClass, AllPickupNodes[RandPickupNode]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllPickupNodes[RandPickupNode]->GetActorRotation());
 
-					if (AllNavigationNodes.Num() > 1)	//checks if there is more than 1 specified number of power ups
+					if (AllPickupNodes.Num() > 1)	//checks if there is more than 1 specified number of power ups
 					{
-						AllNavigationNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
+						AllPickupNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
 					}
 				}
 				else
 				{
-					AHOTPickup* Pickup = GetWorld()->SpawnActor<AHOTPickup>(HOTPickupClass, AllNavigationNodes[RandPickupNode]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllNavigationNodes[RandPickupNode]->GetActorRotation());
+					AHOTPickup* Pickup = GetWorld()->SpawnActor<AHOTPickup>(HOTPickupClass, AllPickupNodes[RandPickupNode]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllPickupNodes[RandPickupNode]->GetActorRotation());
 
-					if (AllNavigationNodes.Num() > 1)	//checks if there is more than 1 specified number of power ups
+					if (AllPickupNodes.Num() > 1)	//checks if there is more than 1 specified number of power ups
 					{
-							AllNavigationNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
+							AllPickupNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
 					}
 				}
 			}
@@ -96,20 +90,20 @@ void AMultiplayerGameMode::GeneratePickupFunctionality()
 			{
 				if (WhichArmorPowerup <= 60)
 				{
-					ALightArmorPickup* Pickup = GetWorld()->SpawnActor<ALightArmorPickup>(LightArmorPickupClass, AllNavigationNodes[RandPickupNode]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllNavigationNodes[RandPickupNode]->GetActorRotation());
+					ALightArmorPickup* Pickup = GetWorld()->SpawnActor<ALightArmorPickup>(LightArmorPickupClass, AllPickupNodes[RandPickupNode]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllPickupNodes[RandPickupNode]->GetActorRotation());
 
-					if (AllNavigationNodes.Num() > 1)	//checks if there is more than 1 specified number of power ups
+					if (AllPickupNodes.Num() > 1)	//checks if there is more than 1 specified number of power ups
 					{
-						AllNavigationNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
+						AllPickupNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
 					}
 				}
 				else
 				{
-					AHeavyArmorPickup* Pickup = GetWorld()->SpawnActor<AHeavyArmorPickup>(HeavyArmorPickupClass, AllNavigationNodes[RandPickupNode]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllNavigationNodes[RandPickupNode]->GetActorRotation());
+					AHeavyArmorPickup* Pickup = GetWorld()->SpawnActor<AHeavyArmorPickup>(HeavyArmorPickupClass, AllPickupNodes[RandPickupNode]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllPickupNodes[RandPickupNode]->GetActorRotation());
 
-					if (AllNavigationNodes.Num() > 1)	//checks if there is more than 1 specified number of power ups
+					if (AllPickupNodes.Num() > 1)	//checks if there is more than 1 specified number of power ups
 					{
-						AllNavigationNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
+						AllPickupNodes.RemoveAt(RandPickupNode);	//removes the pick up node from the array
 					}
 				}
 			}
@@ -119,5 +113,5 @@ void AMultiplayerGameMode::GeneratePickupFunctionality()
 
 void AMultiplayerGameMode::GameOver(AController* Controller)
 {
-	//UGameplayStatics::OpenLevel(this, "GameOver");
+	UE_LOG(LogTemp, Warning, TEXT("You DIED!"))
 }

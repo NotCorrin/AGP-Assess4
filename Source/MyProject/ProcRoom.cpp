@@ -125,9 +125,8 @@ void AProcRoom::GenerateNextRoom_Implementation(FVector SpawnLocation, bool bUpR
 		// Set the parameters of the NewRoom
 		NewRoom->ProcManager = ProcManager;
 
-		NewRoom->Node = GetWorld()->SpawnActor<ANavigationNode>(NodeClass, SpawnLocation + FVector(200, 200, 5), FRotator::ZeroRotator);
-		NewRoom->Node->ConnectedNodes.Add(Node);
-		Node->ConnectedNodes.Add(NewRoom->Node);
+		UE_LOG(LogTemp, Error, TEXT("WHAT"))
+		NewRoom->Node = GetWorld()->SpawnActor<APickupNode>(NodeClass, SpawnLocation + FVector(200, 200, 5), FRotator::ZeroRotator);
 		
 		if (bUpRequired)
 		{
@@ -243,9 +242,7 @@ void AProcRoom::GenerateNextRoom_Implementation(FVector SpawnLocation, bool bUpR
 		NewRoom->bCanGenRight = false;
 		NewRoom->bCanGenLeft = false;
 
-		NewRoom->Node = GetWorld()->SpawnActor<ANavigationNode>(NodeClass, SpawnLocation + FVector(200, 200, 5), FRotator::ZeroRotator);
-		NewRoom->Node->ConnectedNodes.Add(Node);
-		Node->ConnectedNodes.Add(NewRoom->Node);
+		NewRoom->Node = GetWorld()->SpawnActor<APickupNode>(NodeClass, SpawnLocation + FVector(200, 200, 5), FRotator::ZeroRotator);
 
 		NewRoom->ProcManager = ProcManager;
 		ProcManager->Rooms.Add(NewRoom);

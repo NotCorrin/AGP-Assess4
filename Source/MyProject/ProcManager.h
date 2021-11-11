@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "PickupNode.h"
 #include "ProcRoom.h"
 #include "GameFramework/Actor.h"
 #include "ProcManager.generated.h"
@@ -25,7 +27,7 @@ class MYPROJECT_API AProcManager : public AActor
 	TSubclassOf<AProcRoom> Room;
 
 	UPROPERTY(EditAnywhere, Category="Procedural Rooms")
-	TSubclassOf<ANavigationNode> NodeClass;
+	TSubclassOf<APickupNode> NodeClass;
 
 	int MaxRoomNumber;
 	
