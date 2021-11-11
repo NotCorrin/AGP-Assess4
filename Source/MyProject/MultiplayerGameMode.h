@@ -20,6 +20,8 @@ public:
 
 	TArray<class APickupNode*> AllPickupNodes;
 
+	TArray<class APlayerCharacter*> AllPlayerCharacters;
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APickup> SprintPickupClass;
 

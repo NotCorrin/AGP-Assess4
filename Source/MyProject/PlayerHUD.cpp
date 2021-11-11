@@ -3,6 +3,7 @@
 
 #include "PlayerHUD.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "Blueprint/UserWidget.h"
@@ -25,6 +26,18 @@ APlayerHUD::APlayerHUD()
 			HealthProgressBar = Cast<UProgressBar>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("ProgHealthBar")));
 			RoundsRemainingText = Cast<UTextBlock>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("RoundsRemaining")));
 			ArmorText = Cast<UTextBlock>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("Armor")));
+			GameOverText = Cast<UTextBlock>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("GameOver")));
+			BackgroundImage = Cast<UImage>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("Background")));
+
+			if (GameOverText)
+			{
+				GameOverText->SetOpacity(0.0f);
+			}
+
+			if (BackgroundImage)
+			{
+				BackgroundImage->SetOpacity(0.0f);
+			}
 		}
 	}
 }
@@ -51,4 +64,14 @@ void APlayerHUD::SetArmorText(int32 TakeDamage)
 	{
 		ArmorText->SetText(FText::FromString(FString::Printf(TEXT("%i"), TakeDamage)));
 	}
+}
+
+void APlayerHUD::SetGameOver()
+{
+	GameOverText->SetOpacity(1.0f);
+	BackgroundImage->SetOpacity(1.0f);
+
+	HealthProgressBar->SetRenderOpacity(0.0f);
+	RoundsRemainingText->SetOpacity(0.0f);
+	ArmorText->SetOpacity(0.0f);
 }

@@ -11,6 +11,7 @@
 #include "Net/UnrealNetwork.h"
 #include "Kismet/GameplayStatics.h"
 #include "MultiplayerGameMode.h"
+#include "PlayerHUD.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -321,10 +322,33 @@ void APlayerCharacter::OnDeath()
 		if (MultiplayerGameMode)
 		{
 			MultiplayerGameMode->GameOver(GetController());
+
+			UE_LOG(LogTemp, Error, TEXT("GameOver GameMode"))
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Unable to find the GameMode"))
 		}
+	}
+}
+
+void APlayerCharacter::SetGameOver_Implementation()
+{
+	if (GetLocalRole() == ROLE_AutonomousProxy || this->IsLocallyControlled())
+	{
+		if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+		{
+			if (APlayerHUD* PlayerHUD = Cast<APlayerHUD>(PlayerController->GetHUD()))
+			{
+				PlayerHUD->SetGameOver();
+				UE_LOG(LogTemp, Warning, TEXT("Hiding the HUD"))
+			}
+			else
+			{
+				UE_LOG(LogTemp, Error, TEXT("Can't find HUD on controller. AUTONOMOUS"))
+			}
+		}
+
+		UE_LOG(LogTemp, Error, TEXT("Autonomous"))
 	}
 }

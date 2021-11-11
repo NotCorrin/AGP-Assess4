@@ -9,6 +9,7 @@
 #include "JumpPickup.h"
 #include "InstantHealthPickup.h"
 #include "HOTPickup.h"
+#include "PlayerHUD.h"
 #include "LightArmorPickup.h"
 #include "HeavyArmorPickup.h"
 #include "Kismet/GameplayStatics.h"
@@ -113,5 +114,37 @@ void AMultiplayerGameMode::GeneratePickupFunctionality()
 
 void AMultiplayerGameMode::GameOver(AController* Controller)
 {
-	UE_LOG(LogTemp, Warning, TEXT("You DIED!"))
+	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+
+	if (PlayerController)
+	{
+		APlayerHUD* PlayerHUD = Cast<APlayerHUD>(PlayerController->GetHUD());
+
+		APlayerCharacter* Character = Cast<APlayerCharacter>(PlayerController->GetPawn());
+
+		if (Character)
+		{
+			Character->SetGameOver();
+		}
+	}
+
+	APawn* Pawn = Controller->GetPawn();
+	if (Pawn)
+	{
+		Pawn->SetLifeSpan(0.1f);
+	}
+
+	for (TActorIterator<APlayerCharacter> It(GetWorld()); It; ++It)
+	{
+		AllPlayerCharacters.Add(*It);
+	}
+
+	if (AllPlayerCharacters.Num() > 0)
+	{
+		for (int32 i = 0; i < AllPlayerCharacters.Num(); i++)
+		{
+			AllPlayerCharacters[i]->SetGameOver();
+			AllPlayerCharacters[i]->SetLifeSpan(0.1f);
+		}
+	}
 }

@@ -93,6 +93,9 @@ public:
 
 	void OnDeath();
 
+	UFUNCTION(Client, Reliable)
+	void SetGameOver();
+
 protected:
 
 	float SprintMovemementSpeed;

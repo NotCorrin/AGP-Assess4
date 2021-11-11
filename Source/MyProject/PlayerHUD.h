@@ -20,6 +20,8 @@ public:
 
 	void SetPlayerHealthBarPercent(float Percent);
 
+	void SetGameOver();
+
 private:
 
 	TSubclassOf<class UUserWidget> PlayerHUDClass;
@@ -27,6 +29,8 @@ private:
 	class UProgressBar* HealthProgressBar;
 	class UTextBlock* RoundsRemainingText;
 	UTextBlock* ArmorText;
+	UTextBlock* GameOverText;
+	class UImage* BackgroundImage;
 
 	UFUNCTION(BlueprintCallable)
 	void SetAmmoText(int32 RoundsRemaining);

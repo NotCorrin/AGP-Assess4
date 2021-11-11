@@ -69,6 +69,8 @@ void UHealthComponent::OnDeath()
 	if (PlayerCharacter)
 	{
 		PlayerCharacter->OnDeath();
+
+		UE_LOG(LogTemp, Error, TEXT("Dead"));
 	}
 }
 
