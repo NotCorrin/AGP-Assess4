@@ -145,20 +145,6 @@ void AAIManager::CreateAgents()
 			SpawnedEnemy->Manager = this;
 			SpawnedEnemy->CurrentNode = AllNodes[NodeIndex];
 		}
-
-		for (int32 i = 0; i < NumPickups; i++)
-		{
-			int32 PickupNodeIndex = FMath::RandRange(0, AllPickupNodes.Num() - 1);	//selects a random navigation node
-			APickup* Pickup = GetWorld()->SpawnActor<APickup>(PickupsToSpawn, AllPickupNodes[PickupNodeIndex]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllPickupNodes[PickupNodeIndex]->GetActorRotation());	//spawns the power up on the navigation node
-			Pickup->AIManager = this;	//assigns the power ups AI manager to this AI manager
-
-			if (NumPickups > 1)	//checks if there is more than 1 specified number of power ups
-			{
-				AllPickupNodes.RemoveAt(PickupNodeIndex);	//removes the pick up node from the array
-			}
-
-			UE_LOG(LogTemp, Warning, TEXT("Pickup Node Length: %i"), AllPickupNodes.Num());
-		}
 	}
 }
 

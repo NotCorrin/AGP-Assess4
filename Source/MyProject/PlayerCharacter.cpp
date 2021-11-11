@@ -9,6 +9,8 @@
 #include "Engine/GameEngine.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Net/UnrealNetwork.h"
+#include "Kismet/GameplayStatics.h"
+#include "MultiplayerGameMode.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -27,16 +29,11 @@ APlayerCharacter::APlayerCharacter()
 	bSprintPickedup = false;
 	bJumpPickedUp = false;
 	bHOTPickedUp = false;
-	bWeaponShotTypePickedUp = false;
-	bAmmoPickedUp = false;
 
 	SprintTimer = 0;
 	JumpTimer = 0;
 	HOTTimer = 0;
 	HOTEndTimer = 0;
-	ShotTypeTimer = 0;
-
-	AmmoSize = 5;
 
 	SprintMovemementSpeed = GetCharacterMovement()->MaxWalkSpeed * SprintMultiplier;
 	NormalMovementSpeed = GetCharacterMovement()->MaxWalkSpeed;
@@ -68,8 +65,6 @@ void APlayerCharacter::BeginPlay()
 	{
 		HealthComponent->SetIsReplicated(true);
 	}
-
-	WeaponShotType = EPlayerWeaponShotType::SINGLE_SHOT;	//sets the player's gun shot type to SINGLE_SHOT
 }
 
 // Called every frame
@@ -99,13 +94,6 @@ void APlayerCharacter::Tick(float DeltaTime)
 		GetWorldTimerManager().SetTimer(MemberTimerHandle, this, &APlayerCharacter::HOTPickup, 1.f, true);		//calls and loops the HOTPickup function every 1 seconds
 
 		HOTEndTimer = 0;	//after all health points have been added resets timer fo next pick up
-	}
-	else if (bWeaponShotTypePickedUp && ShotTypeTimer == 0)		//checks if the weapon shot type power up has been picked up and if the ShotTypeTimer is set to 0
-	{
-		ShotTypeTimer = 1;	//sets timer to 1 so the RemoveWeaponShotTypePickup function isn't called every frame
-
-		FTimerHandle MemberTimerHandle;
-		GetWorldTimerManager().SetTimer(MemberTimerHandle, this, &APlayerCharacter::RemoveWeaponShotType, 10.f, true);		//calls the RemoveWeaponShotTypePickup function after 10 seconds
 	}
 }
 
@@ -325,11 +313,18 @@ void APlayerCharacter::HOTPickup()
 	}
 }
 
-void APlayerCharacter::RemoveWeaponShotType()
+void APlayerCharacter::OnDeath()
 {
-	bWeaponShotTypePickedUp = false;	//resets for next pick up
-
-	WeaponShotType = EPlayerWeaponShotType::SINGLE_SHOT;	//returns shot type back to original value
-
-	ShotTypeTimer = 0;	//resets for next pick up
+	if (GetLocalRole() == ROLE_Authority)
+	{
+		AMultiplayerGameMode* MultiplayerGameMode = Cast<AMultiplayerGameMode>(GetWorld()->GetAuthGameMode());
+		if (MultiplayerGameMode)
+		{
+			MultiplayerGameMode->GameOver(GetController());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Unable to find the GameMode"))
+		}
+	}
 }

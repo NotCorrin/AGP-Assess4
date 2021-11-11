@@ -18,7 +18,4 @@ public:
 
 	void OnPickup(AActor* ActorThatPickedUp) override;
 
-	UFUNCTION(BlueprintCallable)
-		void OnGenerate() override;
-
 };

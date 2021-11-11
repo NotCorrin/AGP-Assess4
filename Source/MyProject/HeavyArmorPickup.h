@@ -14,8 +14,7 @@ class MYPROJECT_API AHeavyArmorPickup : public APickup
 {
 	GENERATED_BODY()
 
-		void OnPickup(AActor* ActorThatPickedUp) override;
+public:
 
-	UFUNCTION(BlueprintCallable)
-		void OnGenerate() override;
+	void OnPickup(AActor* ActorThatPickedUp) override;
 };

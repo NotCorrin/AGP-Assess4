@@ -2,12 +2,6 @@
 
 
 #include "InstantHealthPickup.h"
-#include "Engine/GameEngine.h"
-
-void AInstantHealthPickup::OnGenerate()
-{
-	APickup::OnGenerate();
-}
 
 void AInstantHealthPickup::OnPickup(AActor* ActorThatPickedUp)
 {
@@ -19,7 +13,6 @@ void AInstantHealthPickup::OnPickup(AActor* ActorThatPickedUp)
 
 		if (PlayerCharacter->HealthComponent != NULL && PlayerCharacter->HealthComponent->CurrentHealth < PlayerCharacter->HealthComponent->MaxHealth)	//checks if the player has a health component and if the player's current health is less than its max health
 		{
-
 			PlayerCharacter->InstantHealthPickup();
 
 			Destroy();

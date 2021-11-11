@@ -6,6 +6,7 @@
 #include "Net/UnrealNetwork.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerHUD.h"
+#include "PlayerCharacter.h"
 
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
@@ -64,23 +65,16 @@ void UHealthComponent::OnTakeDamage(float Damage)
 
 void UHealthComponent::OnDeath()
 {
-
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(GetOwner());
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->OnDeath();
+	}
 }
 
 float UHealthComponent::HealthPercentageRemaining()
 {
-	//return CurrentHealth / MaxHealth * 100.0f;
-
-	if (MaxArmor == 0)
-	{
-		return TakeDamage = 0;
-
-		UE_LOG(LogTemp, Error, TEXT("Take Damage = 0"));
-	}
-	else
-	{
-		return TakeDamage / MaxArmor * 100.0f;
-	}
+	return CurrentHealth / MaxHealth * 100.0f;
 }
 
 void UHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -91,7 +85,7 @@ void UHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(UHealthComponent, TakeDamage);
 }
 
-void UHealthComponent::UpdateArmorBar()
+void UHealthComponent::UpdateHealthBar()
 {
 	if (GetOwner()->GetLocalRole() == ROLE_AutonomousProxy)
 	{

@@ -62,7 +62,6 @@ void APickupManager::CreateAgents()
 			if (RandPickup < 10)
 			{
 				APickup* Pickup = GetWorld()->SpawnActor<APickup>(SprintPickup, AllPickupNodes[PickupNodeIndex]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllPickupNodes[PickupNodeIndex]->GetActorRotation());	//spawns the power up on the navigation node
-				Pickup->PickupManager = this;	//assigns the power ups pick up manager to this pick up manager
 
 				if (NumPickups > 1)	//checks if there is more than 1 specified number of power ups
 				{
@@ -75,7 +74,6 @@ void APickupManager::CreateAgents()
 			else if (RandPickup >= 10)
 			{
 				APickup* Pickup = GetWorld()->SpawnActor<APickup>(JumpPickup, AllPickupNodes[PickupNodeIndex]->GetActorLocation() + FVector(0.0f, 0.0f, 60.0f), AllPickupNodes[PickupNodeIndex]->GetActorRotation());	//spawns the power up on the navigation node
-				Pickup->PickupManager = this;	//assigns the power ups pick up manager to this pick up manager
 
 				if (NumPickups > 1)	//checks if there is more than 1 specified number of power ups
 				{

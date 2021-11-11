@@ -8,15 +8,6 @@
 #include "HealthComponent.h"
 #include "PlayerCharacter.generated.h"
 
-UENUM(BlueprintType)
-enum class EPlayerWeaponShotType : uint8
-{
-	SINGLE_SHOT,
-	TRIPLE_SHOT,
-	AUTOMATIC,
-	EXPLOSIVE
-};
-
 UCLASS()
 class MYPROJECT_API APlayerCharacter : public ACharacter
 {
@@ -33,25 +24,18 @@ protected:
 public:
 
 	UPROPERTY(EditAnywhere)
-		float LookSensitivity;
+	float LookSensitivity;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float SprintMultiplier;
+	float SprintMultiplier;
 
 	bool bIsSprinting;
 	bool bSprintPickedup;
 	bool bJumpPickedUp;
 	bool bHOTPickedUp;
-	bool bWeaponShotTypePickedUp;
 
 	UPROPERTY(BlueprintReadWrite)
-		bool bAmmoPickedUp;
-
-	UPROPERTY(BlueprintReadOnly)
-		int32 AmmoSize;
-
-	UPROPERTY(BlueprintReadWrite)
-		int32 RoundsRemaining;
+	int32 RoundsRemaining;
 
 	UHealthComponent* HealthComponent;
 
@@ -59,11 +43,6 @@ public:
 	int32 JumpTimer;
 	int32 HOTTimer;
 	int32 HOTEndTimer;
-	int32 ShotTypeTimer;
-
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-		EPlayerWeaponShotType WeaponShotType;
-
 
 	float PickupSprintSpeed;
 	float PickupJumpHeight;
@@ -82,7 +61,7 @@ public:
 	void SprintEnd();
 
 	UFUNCTION(BlueprintImplementableEvent)
-		void BlueprintReload();
+	void BlueprintReload();
 
 	void Reload();
 
@@ -93,10 +72,6 @@ public:
 	void InstantHealthPickup();
 
 	void HOTPickup();
-
-	void RemoveWeaponShotType();
-
-
 
 	UFUNCTION(Server, Reliable)
 		void ServerSprintStart();
@@ -115,6 +90,8 @@ public:
 
 	UFUNCTION(Server, Reliable)
 		void DecreaseJump();
+
+	void OnDeath();
 
 protected:
 

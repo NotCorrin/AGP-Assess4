@@ -25,7 +25,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float MaxHealth;
 
-	UPROPERTY(BlueprintReadWrite, Replicated)
+	UPROPERTY(BlueprintReadWrite, ReplicatedUsing = UpdateHealthBar)
 	float CurrentHealth;
 
 	UPROPERTY(BlueprintReadWrite, Replicated)
@@ -37,9 +37,9 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable)
-		void OnTakeDamage(float Damage);
+	void OnTakeDamage(float Damage);
 	UFUNCTION(BlueprintCallable)
-		void OnDeath();
+	void OnDeath();
 
 	float HealthPercentageRemaining();
 
@@ -48,5 +48,5 @@ public:
 private:
 
 	UFUNCTION()
-		void UpdateArmorBar();
+	void UpdateHealthBar();
 };

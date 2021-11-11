@@ -3,11 +3,6 @@
 
 #include "HeavyArmorPickup.h"
 
-void AHeavyArmorPickup::OnGenerate()
-{
-	APickup::OnGenerate();
-}
-
 void AHeavyArmorPickup::OnPickup(AActor* ActorThatPickedUp)
 {
 	APickup::OnPickup(ActorThatPickedUp);

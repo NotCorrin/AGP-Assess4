@@ -4,8 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
-#include "PickupManager.h"
-#include "TimerManager.h"
+#include "Pickup.h"
 #include "MultiplayerGameMode.generated.h"
 
 /**
@@ -45,8 +44,5 @@ public:
 
 	void GeneratePickupFunctionality();
 
-
-private:
-
-	APickupManager* PickupManager;
+	void GameOver(AController* Controller);
 };

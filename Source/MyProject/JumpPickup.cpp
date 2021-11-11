@@ -4,11 +4,6 @@
 #include "JumpPickup.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-void AJumpPickup::OnGenerate()
-{
-	APickup::OnGenerate();
-}
-
 void AJumpPickup::OnPickup(AActor* ActorThatPickedUp)
 {
 	APickup::OnPickup(ActorThatPickedUp);

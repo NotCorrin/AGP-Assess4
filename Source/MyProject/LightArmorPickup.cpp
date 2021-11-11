@@ -3,11 +3,6 @@
 
 #include "LightArmorPickup.h"
 
-void ALightArmorPickup::OnGenerate()
-{
-	APickup::OnGenerate();
-}
-
 void ALightArmorPickup::OnPickup(AActor* ActorThatPickedUp)
 {
 	APickup::OnPickup(ActorThatPickedUp);
