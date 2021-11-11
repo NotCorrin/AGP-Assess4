@@ -2,16 +2,17 @@
 
 
 #include "PlayerCharacter.h"
+
+#include "EngineUtils.h"
 #include "HealthComponent.h"
 #include "Components/InputComponent.h"
 #include "FirstPersonAnimInstance.h"
 #include "TimerManager.h"
 #include "Engine/GameEngine.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Net/UnrealNetwork.h"
-#include "Kismet/GameplayStatics.h"
 #include "MultiplayerGameMode.h"
 #include "PlayerHUD.h"
+#include "ProcManager.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -66,6 +67,9 @@ void APlayerCharacter::BeginPlay()
 	{
 		HealthComponent->SetIsReplicated(true);
 	}
+
+	FTimerHandle TimerHandle;
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &APlayerCharacter::SetSpawnPoint, 0.5f, false);
 }
 
 // Called every frame
@@ -189,6 +193,17 @@ void APlayerCharacter::SprintEnd()
 		AnimInstance->bIsSprinting = false;
 	}
 
+}
+
+void APlayerCharacter::SetSpawnPoint_Implementation()
+{
+	TArray<AProcRoom*> AllRooms;
+	for (TActorIterator<AProcRoom> It(GetWorld()); It; ++It)
+	{
+		AllRooms.Add(*It);    //Adds all rooms to an array
+	}
+	AProcRoom* RandomRoom = AllRooms[FMath::RandRange(0, AllRooms.Num() - 1)];
+	TeleportTo(RandomRoom->GetActorLocation() + FVector(80, 200, 5), FRotator::ZeroRotator);
 }
 
 void APlayerCharacter::ServerSprintStart_Implementation()

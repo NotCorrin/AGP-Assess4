@@ -60,6 +60,9 @@ public:
 	void SprintStart();
 	void SprintEnd();
 
+	UFUNCTION(Server, Reliable)
+	void SetSpawnPoint();
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void BlueprintReload();
 
