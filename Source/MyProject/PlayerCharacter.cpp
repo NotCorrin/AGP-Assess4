@@ -208,6 +208,7 @@ void APlayerCharacter::SetSpawnPoint_Implementation()
 	{
 		AllRooms.Add(*It);    //Adds all rooms to an array
 	}
+	// Select a random room from AllRooms, then teleport to it
 	AProcRoom* RandomRoom = AllRooms[FMath::RandRange(0, AllRooms.Num() - 1)];
 	TeleportTo(RandomRoom->GetActorLocation() + FVector(80, 200, 5), FRotator::ZeroRotator);
 }
