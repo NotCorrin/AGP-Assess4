@@ -31,8 +31,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, Replicated)
 	int32 TakeDamage;
 
-	float MaxArmor;
-
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 

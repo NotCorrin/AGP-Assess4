@@ -12,15 +12,15 @@ void AJumpPickup::OnPickup(AActor* ActorThatPickedUp)
 	{
 		PlayerCharacter = Cast<APlayerCharacter>(ActorThatPickedUp);
 
-		if (!PlayerCharacter->bJumpPickedUp)		//checks if the player hasn't already picked up a jump powerup
+		if (!PlayerCharacter->bJumpPickedUp)		//checks if the player hasn't already picked up a jump pickup
 		{
-			PlayerCharacter->GetCharacterMovement()->JumpZVelocity = PlayerCharacter->PickupJumpHeight;
+			PlayerCharacter->GetCharacterMovement()->JumpZVelocity = PlayerCharacter->PickupJumpHeight;		//increases player's jump height
 
 			PlayerCharacter->IncreaseJump();
 
-			PlayerCharacter->bJumpPickedUp = true;		//indicates that the player has picked up a jump powerup to prevent them from picking up multiple until the timer has finished
+			PlayerCharacter->bJumpPickedUp = true;		//indicates that the player has picked up a jump pickup to prevent them from picking up multiple until the timer has finished
 
-			Destroy();
+			Destroy();	//removes pickup from world
 		}
 	}
 }

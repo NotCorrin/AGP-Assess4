@@ -84,29 +84,29 @@ public:
 	void HOTPickup();
 
 	UFUNCTION(Server, Reliable)
-		void ServerSprintStart();
+	void ServerSprintStart();
 
 	UFUNCTION(Server, Reliable)
-		void ServerSprintEnd();
+	void ServerSprintEnd();
 
 	UFUNCTION(Server, Reliable)
-		void AlreadySprinting();
+	void AlreadySprinting();
 
 	UFUNCTION(Server, Reliable)
-		void SprintSpeed();
+	void SprintSpeed();
 
 	UFUNCTION(Server, Reliable)
-		void IncreaseJump();
+	void IncreaseJump();
 
 	UFUNCTION(Server, Reliable)
-		void DecreaseJump();
+	void DecreaseJump();
 
 	void OnDeath();
 
 	UFUNCTION(Client, Reliable)
 	void SetGameOver();
 
-	void IncreaseDamagePickup();
+	void RemoveIncreasedDamagePickup();
 
 protected:
 

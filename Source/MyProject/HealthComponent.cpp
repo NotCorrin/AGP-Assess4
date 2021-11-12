@@ -16,8 +16,7 @@ UHealthComponent::UHealthComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 	MaxHealth = 100.0f;
 
-	TakeDamage = 0;
-	MaxArmor = 0;
+	TakeDamage = 0;		//set to 0 so the parent actor can lose health
 }
 
 
@@ -65,12 +64,11 @@ void UHealthComponent::OnTakeDamage(float Damage)
 
 void UHealthComponent::OnDeath()
 {
-	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(GetOwner());
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(GetOwner());		//gets access the Player Character script
+
 	if (PlayerCharacter)
 	{
-		PlayerCharacter->OnDeath();
-
-		UE_LOG(LogTemp, Error, TEXT("Dead"));
+		PlayerCharacter->OnDeath();		//calls th OnDeath function in the Player Character script
 	}
 }
 
@@ -89,15 +87,15 @@ void UHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 void UHealthComponent::UpdateHealthBar()
 {
-	if (GetOwner()->GetLocalRole() == ROLE_AutonomousProxy)
+	if (GetOwner()->GetLocalRole() == ROLE_AutonomousProxy)		//checks if the parent actor is an autonomous proxy
 	{
 		AHUD* HUD = UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHUD();
 
 		APlayerHUD* PlayerHUD = Cast<APlayerHUD>(HUD);
 
-		if (PlayerHUD != nullptr)
+		if (PlayerHUD)
 		{
-			PlayerHUD->SetPlayerHealthBarPercent(HealthPercentageRemaining() / 100.0f);
+			PlayerHUD->SetPlayerHealthBarPercent(HealthPercentageRemaining() / 100.0f);		//changes the health bar to show the current health of the player
 		}
 	}
 }
