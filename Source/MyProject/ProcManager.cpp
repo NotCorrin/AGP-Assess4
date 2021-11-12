@@ -59,7 +59,8 @@ void AProcManager::GenerateStartingRoom_Implementation()
 	case 3: Rooms[0]->bHasLeftDoor = true; break;
 	}
 	// Continue setting parameters, followed by the function call which will start a chain reaction
-	Rooms[0]->bIsStart = true;
+	// Uncomment following line for debugging purposes
+	// Rooms[0]->bIsStart = true;
 	Rooms[0]->RoomNumber = 1;
 	Rooms[0]->ProcManager = this;
 	Rooms[0]->Node = GetWorld()->SpawnActor<APickupNode>(NodeClass, FVector(200, 200, 5), FRotator::ZeroRotator);
