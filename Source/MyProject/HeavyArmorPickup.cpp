@@ -7,15 +7,15 @@ void AHeavyArmorPickup::OnPickup(AActor* ActorThatPickedUp)
 {
 	APickup::OnPickup(ActorThatPickedUp);
 
-	if (ActorThatPickedUp->IsA<APlayerCharacter>())
+	if (ActorThatPickedUp->IsA<APlayerCharacter>()) //checks if the actor that picked up the pickup is a player character
 	{
 		PlayerCharacter = Cast<APlayerCharacter>(ActorThatPickedUp);
 
-		if (PlayerCharacter->HealthComponent->TakeDamage == 0)	//checks if the player hasn't already picked up an armor powerup to prevent them from picking up multiple until their TakeDamage is equal to 0 again
+		if (PlayerCharacter->HealthComponent->TakeDamage == 0)	//checks if the player hasn't already picked up an armor pickup to prevent them from picking up multiple until their TakeDamage is equal to 0 again
 		{
-			PlayerCharacter->HealthComponent->TakeDamage = 2;	//sets the player's Take Damage variable to 3
+			PlayerCharacter->HealthComponent->TakeDamage = 2;	//sets the player's health component Take Damage variable to 2
 
-			Destroy();
+			Destroy();	//removes pickup from the world
 		}
 	}
 }

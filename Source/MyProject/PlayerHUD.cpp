@@ -14,14 +14,13 @@ APlayerHUD::APlayerHUD()
 
 	PlayerHUDClass = PlayerHUDObject.Class;
 
-	if (PlayerHUDClass != nullptr)
+	if (PlayerHUDClass)
 	{
-
 		CurrentPlayerHUDWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerHUDClass);
 
-		if (CurrentPlayerHUDWidget != nullptr)
+		if (CurrentPlayerHUDWidget)
 		{
-			CurrentPlayerHUDWidget->AddToViewport();
+			CurrentPlayerHUDWidget->AddToViewport();	//adds player HUD to viewport
 
 			HealthProgressBar = Cast<UProgressBar>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("ProgHealthBar")));
 			RoundsRemainingText = Cast<UTextBlock>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("RoundsRemaining")));
@@ -31,12 +30,11 @@ APlayerHUD::APlayerHUD()
 
 			if (GameOverText)
 			{
-				GameOverText->SetOpacity(0.0f);
+				GameOverText->SetOpacity(0.0f);		//makes the Game Over text not visible on the HUD
 			}
-
 			if (BackgroundImage)
 			{
-				BackgroundImage->SetOpacity(0.0f);
+				BackgroundImage->SetOpacity(0.0f);	//makes the background not visible on the HUD
 			}
 		}
 	}
@@ -44,9 +42,9 @@ APlayerHUD::APlayerHUD()
 
 void APlayerHUD::SetPlayerHealthBarPercent(float Percent)
 {
-	if (HealthProgressBar != nullptr)
+	if (HealthProgressBar)
 	{
-		HealthProgressBar->SetPercent(Percent);
+		HealthProgressBar->SetPercent(Percent);	//sets health progress bar on the HUD to be the players current health
 	}
 }
 
@@ -54,7 +52,7 @@ void APlayerHUD::SetAmmoText(int32 RoundsRemaining)
 {
 	if (RoundsRemainingText)
 	{
-		RoundsRemainingText->SetText(FText::FromString(FString::Printf(TEXT("%i"), RoundsRemaining)));
+		RoundsRemainingText->SetText(FText::FromString(FString::Printf(TEXT("%i"), RoundsRemaining)));	//shows how many bullets a player has on their HUD
 	}
 }
 
@@ -62,16 +60,16 @@ void APlayerHUD::SetArmorText(int32 TakeDamage)
 {
 	if (ArmorText)
 	{
-		ArmorText->SetText(FText::FromString(FString::Printf(TEXT("%i"), TakeDamage)));
+		ArmorText->SetText(FText::FromString(FString::Printf(TEXT("%i"), TakeDamage)));		//shows how much armor a player has on their HUD
 	}
 }
 
 void APlayerHUD::SetGameOver()
 {
-	GameOverText->SetOpacity(1.0f);
-	BackgroundImage->SetOpacity(1.0f);
+	GameOverText->SetOpacity(1.0f);		//shows Game Over text on the player's HUD
+	BackgroundImage->SetOpacity(1.0f);	//shows background on the player's HUD
 
-	HealthProgressBar->SetRenderOpacity(0.0f);
-	RoundsRemainingText->SetOpacity(0.0f);
-	ArmorText->SetOpacity(0.0f);
+	HealthProgressBar->SetRenderOpacity(0.0f);	//makes the health progress bar not visible on the player's HUD
+	RoundsRemainingText->SetOpacity(0.0f);		//makes the rounds remaining text not visible on the player's HUD
+	ArmorText->SetOpacity(0.0f);	//makes the armor text not visible on the player's HUD
 }
