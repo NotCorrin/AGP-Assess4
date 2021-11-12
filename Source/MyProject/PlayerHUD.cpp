@@ -23,7 +23,9 @@ APlayerHUD::APlayerHUD()
 			CurrentPlayerHUDWidget->AddToViewport();	//adds player HUD to viewport
 
 			HealthProgressBar = Cast<UProgressBar>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("ProgHealthBar")));
+			RoundsTitle = Cast<UTextBlock>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("RoundsTitle")));
 			RoundsRemainingText = Cast<UTextBlock>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("RoundsRemaining")));
+			ArmorTitle = Cast<UTextBlock>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("ArmorTitle")));
 			ArmorText = Cast<UTextBlock>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("Armor")));
 			GameOverText = Cast<UTextBlock>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("GameOver")));
 			BackgroundImage = Cast<UImage>(CurrentPlayerHUDWidget->GetWidgetFromName(TEXT("Background")));
@@ -69,7 +71,10 @@ void APlayerHUD::SetGameOver()
 	GameOverText->SetOpacity(1.0f);		//shows Game Over text on the player's HUD
 	BackgroundImage->SetOpacity(1.0f);	//shows background on the player's HUD
 
-	HealthProgressBar->SetRenderOpacity(0.0f);	//makes the health progress bar not visible on the player's HUD
-	RoundsRemainingText->SetOpacity(0.0f);		//makes the rounds remaining text not visible on the player's HUD
-	ArmorText->SetOpacity(0.0f);	//makes the armor text not visible on the player's HUD
+	// Removes the following HUD elements
+	HealthProgressBar->SetRenderOpacity(0.0f);
+	RoundsTitle->SetOpacity(0.0f);
+	RoundsRemainingText->SetOpacity(0.0f);
+	ArmorTitle->SetOpacity(0.0f);
+	ArmorText->SetOpacity(0.0f);
 }

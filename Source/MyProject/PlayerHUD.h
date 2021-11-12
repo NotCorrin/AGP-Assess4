@@ -27,7 +27,9 @@ private:
 	TSubclassOf<class UUserWidget> PlayerHUDClass;
 	UUserWidget* CurrentPlayerHUDWidget;
 	class UProgressBar* HealthProgressBar;
-	class UTextBlock* RoundsRemainingText;
+	class UTextBlock* RoundsTitle;
+	UTextBlock* RoundsRemainingText;
+	UTextBlock* ArmorTitle;
 	UTextBlock* ArmorText;
 	UTextBlock* GameOverText;
 	class UImage* BackgroundImage;
